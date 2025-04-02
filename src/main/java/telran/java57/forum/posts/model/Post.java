@@ -56,17 +56,4 @@ public class Post {
         return comments.remove(comment);
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", author='" + author + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", tags=" + tags +
-                ", likes=" + likes +
-                ", comments=" + comments +
-                '}';
-    }
 }

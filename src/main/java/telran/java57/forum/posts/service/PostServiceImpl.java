@@ -9,6 +9,8 @@ import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.model.Post;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -65,5 +67,15 @@ public class PostServiceImpl implements PostService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Collection<PostDto> getPostsByAuthor(String author) {
+        Collection<Post> postCollection = postRepository.getPostsByAuthor(author);
+        ArrayList<PostDto> res = new ArrayList<>();
+        for(Post post:postCollection){
+            res.add(modelMapper.map(post, PostDto.class));
+        }
+        return res;
     }
 }

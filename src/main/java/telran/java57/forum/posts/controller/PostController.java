@@ -6,6 +6,9 @@ import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.service.PostService;
 
+import java.util.Collection;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/forum")
@@ -18,7 +21,7 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public PostDto getPostById(@PathVariable String id) {
+    public PostDto findPostById(@PathVariable String id) {
         return postService.getPostById(id);
     }
 
@@ -30,5 +33,10 @@ public class PostController {
     @DeleteMapping("/post/{id}")
     public boolean deletePost(@PathVariable String id) {
         return postService.deletePost(id);
+    }
+
+    @GetMapping("/posts/author/{author}")
+    public Collection<PostDto> findPostsByAuthor(@PathVariable String author) {
+        return postService.getPostsByAuthor(author);
     }
 }
