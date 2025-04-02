@@ -2,6 +2,7 @@ package telran.java57.forum.posts.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import telran.java57.forum.posts.dto.NewCommentDto;
 import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.service.PostService;
@@ -38,5 +39,12 @@ public class PostController {
     @GetMapping("/posts/author/{author}")
     public Collection<PostDto> findPostsByAuthor(@PathVariable String author) {
         return postService.getPostsByAuthor(author);
+    }
+
+    @PutMapping("/post/{postId}/comment/{user}")
+    public PostDto addComment(@PathVariable String postId,
+                              @PathVariable String user,
+                              @RequestBody NewCommentDto newCommentDto) {
+        return postService.addComment(postId, user, newCommentDto);
     }
 }

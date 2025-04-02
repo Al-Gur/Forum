@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import telran.java57.forum.posts.dao.PostRepository;
+import telran.java57.forum.posts.dto.NewCommentDto;
 import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
+import telran.java57.forum.posts.model.Comment;
 import telran.java57.forum.posts.model.Post;
 
 import java.util.ArrayList;
@@ -77,5 +79,16 @@ public class PostServiceImpl implements PostService {
             res.add(modelMapper.map(post, PostDto.class));
         }
         return res;
+    }
+
+    @Override
+    public PostDto addComment(String postId, String user, NewCommentDto newCommentDto) {
+        Post post = postRepository.getPostById(postId);
+        if (post == null) {
+            return null;
+        }
+        post.addComment(new Comment(newCommentDto.getMessage(), user));
+        post = postRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 }
