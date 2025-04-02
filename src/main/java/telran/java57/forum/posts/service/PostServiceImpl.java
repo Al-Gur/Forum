@@ -8,6 +8,9 @@ import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.model.Post;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -25,6 +28,25 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto getPostById(String id) {
         Post post = postRepository.getPostById(id);
+        return modelMapper.map(post, PostDto.class);
+    }
+
+    @Override
+    public PostDto updatePost(String id, NewPostDto newPostDto) {
+        Post post = postRepository.getPostById(id);
+        post.setTitle(newPostDto.getTitle());
+        post.setContent(newPostDto.getContent());
+        ArrayList<String> oldTags=new ArrayList<>();
+        oldTags.addAll(post.getTags());
+        for(String tag: oldTags){
+            post.removeTag(tag);
+        }
+        ArrayList<String> newTags=new ArrayList<>();
+        newTags.addAll(newPostDto.getTags());
+        for(String tag: newTags){
+            post.addTag(tag);
+        }
+        post = postRepository.save(post);
         return modelMapper.map(post, PostDto.class);
     }
 }

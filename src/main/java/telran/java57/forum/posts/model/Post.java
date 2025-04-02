@@ -55,4 +55,18 @@ public class Post {
     public boolean removeComment(Comment comment){
         return comments.remove(comment);
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", author='" + author + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", tags=" + tags +
+                ", likes=" + likes +
+                ", comments=" + comments +
+                '}';
+    }
 }
