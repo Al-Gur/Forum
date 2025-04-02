@@ -8,4 +8,5 @@ public interface PostService {
     PostDto addNewPost(String author, NewPostDto newPostDto);
     PostDto getPostById(String id);
     PostDto updatePost(String id, NewPostDto newPostDto);
+    boolean deletePost(String id);
 }

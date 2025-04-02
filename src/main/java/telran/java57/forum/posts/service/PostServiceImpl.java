@@ -28,25 +28,42 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto getPostById(String id) {
         Post post = postRepository.getPostById(id);
+        if (post == null) {
+            return null;
+        }
         return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto updatePost(String id, NewPostDto newPostDto) {
         Post post = postRepository.getPostById(id);
+        if (post == null) {
+            return null;
+        }
         post.setTitle(newPostDto.getTitle());
         post.setContent(newPostDto.getContent());
-        ArrayList<String> oldTags=new ArrayList<>();
+        ArrayList<String> oldTags = new ArrayList<>();
         oldTags.addAll(post.getTags());
-        for(String tag: oldTags){
+        for (String tag : oldTags) {
             post.removeTag(tag);
         }
-        ArrayList<String> newTags=new ArrayList<>();
+        ArrayList<String> newTags = new ArrayList<>();
         newTags.addAll(newPostDto.getTags());
-        for(String tag: newTags){
+        for (String tag : newTags) {
             post.addTag(tag);
         }
         post = postRepository.save(post);
         return modelMapper.map(post, PostDto.class);
+    }
+
+    @Override
+    public boolean deletePost(String id) {
+        Post post = postRepository.getPostById(id);
+        if (post != null) {
+            postRepository.delete(post);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
