@@ -4,16 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import telran.java57.forum.posts.dao.PostRepository;
+import telran.java57.forum.posts.dto.DatePeriodDto;
 import telran.java57.forum.posts.dto.NewCommentDto;
 import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.model.Comment;
 import telran.java57.forum.posts.model.Post;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -90,5 +89,30 @@ public class PostServiceImpl implements PostService {
         post.addComment(new Comment(newCommentDto.getMessage(), user));
         post = postRepository.save(post);
         return modelMapper.map(post, PostDto.class);
+    }
+
+    @Override
+    public Collection<PostDto> findPostsByTags(List<String>tags) {
+        return postRepository.findPostsByTagsInIgnoreCase(tags)
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
+    }
+
+    @Override
+    public Iterable<PostDto> findPostsByPeriod(DatePeriodDto datePeriodDto) {
+        return postRepository.findPostsByDateCreatedBetween(
+                datePeriodDto.getDateFrom(), datePeriodDto.getDateTo())
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
+    }
+
+    @Override
+    public void addLike(String postId) {
+        Post post = postRepository.getPostById(postId);
+        if (post == null) {
+            return;
+        }
+        post.addLike();
+        postRepository.save(post);
     }
 }

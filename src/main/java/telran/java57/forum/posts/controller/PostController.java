@@ -2,13 +2,16 @@ package telran.java57.forum.posts.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import telran.java57.forum.posts.dto.DatePeriodDto;
 import telran.java57.forum.posts.dto.NewCommentDto;
 import telran.java57.forum.posts.dto.NewPostDto;
 import telran.java57.forum.posts.dto.PostDto;
 import telran.java57.forum.posts.service.PostService;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,5 +49,20 @@ public class PostController {
                               @PathVariable String user,
                               @RequestBody NewCommentDto newCommentDto) {
         return postService.addComment(postId, user, newCommentDto);
+    }
+
+    @PostMapping("/posts/tags")
+    public Collection<PostDto> findPostsByTags(@RequestBody List<String> tags) {
+        return postService.findPostsByTags(tags);
+    }
+
+    @PostMapping("/posts/period")
+    public Iterable<PostDto> findPostsByPeriod(@RequestBody DatePeriodDto datePeriodDto) {
+        return postService.findPostsByPeriod(datePeriodDto);
+    }
+
+    @PutMapping("/post/{postId}/like")
+    public void addLike(@PathVariable String postId) {
+        postService.addLike(postId);
     }
 }
