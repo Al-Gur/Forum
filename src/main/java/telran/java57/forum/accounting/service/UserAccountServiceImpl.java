@@ -8,10 +8,12 @@ import telran.java57.forum.accounting.dto.RolesDto;
 import telran.java57.forum.accounting.dto.UpdateUserDto;
 import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
+import telran.java57.forum.accounting.model.Role;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.exception.AccountNotFoundException;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -40,21 +42,36 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public void changePassword(String name, String newPassword) {
-
+        UserAccount account = userRepository.findById(name).orElseThrow(AccountNotFoundException::new);
+        account.setPassword(newPassword);
     }
 
     @Override
     public UserDto removeUser(String login) {
-        return null;
+        UserAccount account = userRepository.findById(login).orElseThrow(AccountNotFoundException::new);
+        userRepository.delete(account);
+        return modelMapper.map(account, UserDto.class);
     }
 
     @Override
     public UserDto updateUser(String login, UpdateUserDto updateUserDto) {
-        return null;
+        UserAccount account = userRepository.findById(login).orElseThrow(AccountNotFoundException::new);
+        account.setFirstName(updateUserDto.getFirstName());
+        account.setLastName(updateUserDto.getLastName());
+        userRepository.save(account);
+        return modelMapper.map(account, UserDto.class);
     }
 
     @Override
     public RolesDto changeRolesList(String login, String role, boolean isAddRole) {
-        return null;
+        UserAccount account = userRepository.findById(login).orElseThrow(AccountNotFoundException::new);
+        if(isAddRole){
+            account.addRole(role);
+        }
+        else{
+            account.removeRole(role);
+        }
+        Set<Role> roles = account.getRoles();
+        return modelMapper.map(roles, RolesDto.class);
     }
 }
