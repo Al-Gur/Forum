@@ -73,7 +73,6 @@ public class UserAccountServiceImpl implements UserAccountService {
             account.removeRole(role);
         }
         userRepository.save(account);
-        account.getRoles();
         Set<String> roles = new HashSet<>();
         account.getRoles().forEach(r -> roles.add(r.toString()));
         return new RolesDto(login, roles);
