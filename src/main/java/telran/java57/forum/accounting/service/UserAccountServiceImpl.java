@@ -12,6 +12,7 @@ import telran.java57.forum.accounting.model.Role;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.exception.AccountNotFoundException;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,6 +45,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public void changePassword(String name, String newPassword) {
         UserAccount account = userRepository.findById(name).orElseThrow(AccountNotFoundException::new);
         account.setPassword(newPassword);
+        userRepository.save(account);
     }
 
     @Override
@@ -65,13 +67,15 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public RolesDto changeRolesList(String login, String role, boolean isAddRole) {
         UserAccount account = userRepository.findById(login).orElseThrow(AccountNotFoundException::new);
-        if(isAddRole){
+        if (isAddRole) {
             account.addRole(role);
-        }
-        else{
+        } else {
             account.removeRole(role);
         }
-        Set<Role> roles = account.getRoles();
-        return modelMapper.map(roles, RolesDto.class);
+        userRepository.save(account);
+        account.getRoles();
+        Set<String> roles = new HashSet<>();
+        account.getRoles().forEach(r -> roles.add(r.toString()));
+        return new RolesDto(login, roles);
     }
 }
