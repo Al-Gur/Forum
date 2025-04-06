@@ -27,7 +27,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserDto register(UserRegisterDto userRegisterDto) {
         String login = userRegisterDto.getLogin();
-        if (login == null || login.equals("")) {
+        if (login == null || login.isEmpty()) {
             throw new BadRequestException();
         }
         Optional<UserAccount> oldAccount = userRepository.findById(login);
