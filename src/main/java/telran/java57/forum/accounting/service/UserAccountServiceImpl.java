@@ -8,6 +8,7 @@ import telran.java57.forum.accounting.dto.RolesDto;
 import telran.java57.forum.accounting.dto.UpdateUserDto;
 import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
+import telran.java57.forum.accounting.dto.exception.AccountAlreadyExistsException;
 import telran.java57.forum.accounting.model.Role;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.exception.AccountNotFoundException;
@@ -27,7 +28,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public UserDto register(UserRegisterDto userRegisterDto) {
         Optional<UserAccount> oldAccount = userRepository.findById(userRegisterDto.getLogin());
         if (oldAccount.isPresent()) {
-            return null;
+            throw new AccountAlreadyExistsException();
         }
         UserAccount account = new UserAccount(userRegisterDto.getLogin(),
                 userRegisterDto.getPassword(), userRegisterDto.getFirstName(), userRegisterDto.getLastName());
