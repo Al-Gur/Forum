@@ -9,7 +9,6 @@ import telran.java57.forum.accounting.dto.UpdateUserDto;
 import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
 import telran.java57.forum.accounting.dto.exception.AccountAlreadyExistsException;
-import telran.java57.forum.accounting.model.Role;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.exception.AccountNotFoundException;
 
