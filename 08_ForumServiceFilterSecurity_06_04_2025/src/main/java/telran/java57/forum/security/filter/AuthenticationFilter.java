@@ -36,10 +36,9 @@ public class AuthenticationFilter implements Filter {
             UserAccount userAccount = userAccountRepository.findById(credentials[0])
                     .orElseThrow(UserNotFoundException::new);
 
-            if (!BCrypt.checkpw(credentials[1], userAccount.getPassword())) {
-                request = new WrappedRequest(request, WrongPasswordException.exceptionName);//throw new WrongPasswordException();
-            } else
+            if (BCrypt.checkpw(credentials[1], userAccount.getPassword())) {
                 request = new WrappedRequest(request, credentials[0]);
+            }
         }
         filterChain.doFilter(request, response);
     }
