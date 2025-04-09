@@ -50,7 +50,7 @@ public class UserAccountController {
     //TODO don't testing
     @PostMapping("/login")
     public UserDto login(Principal principal){
-        return userAccountService.getUser(principal.getName());
+        return userAccountService.login(principal); //getUser(principal.getName());
     }
 
     //TODO don't testing

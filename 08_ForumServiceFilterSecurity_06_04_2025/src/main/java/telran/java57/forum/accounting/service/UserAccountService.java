@@ -5,6 +5,8 @@ import telran.java57.forum.accounting.dto.UpdateUserDto;
 import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
 
+import java.security.Principal;
+
 public interface UserAccountService {
     UserDto register(UserRegisterDto userRegisterDto);
 
@@ -17,4 +19,6 @@ public interface UserAccountService {
     UserDto updateUser(String login, UpdateUserDto updateUserDto);
 
     RolesDto changeRolesList(String login, String role, boolean isAddRole);
+
+    UserDto login(Principal principal);
 }

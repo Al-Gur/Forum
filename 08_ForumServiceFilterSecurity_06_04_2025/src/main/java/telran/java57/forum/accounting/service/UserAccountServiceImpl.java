@@ -10,8 +10,11 @@ import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
 import telran.java57.forum.accounting.dto.exceptions.UserExistsException;
 import telran.java57.forum.accounting.dto.exceptions.UserNotFoundException;
+import telran.java57.forum.accounting.dto.exceptions.WrongPasswordException;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.RolesDto;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -79,4 +82,12 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountRepository.save(userAccount);
     }
 
+    @Override
+    public UserDto login(Principal principal) {
+        String name = principal.getName();
+        if (name == WrongPasswordException.exceptionName) {
+            throw new WrongPasswordException();
+        }
+        return getUser(name);
+    }
 }
