@@ -16,6 +16,7 @@ import telran.java57.forum.accounting.model.UserAccount;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
+import java.util.Optional;
 
 @Component
 @Order(10)
@@ -32,14 +33,13 @@ public class AuthenticationFilter implements Filter {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null) {
             String[] credentials = getCredentials(authorizationHeader);
-
-            UserAccount userAccount = userAccountRepository.findById(credentials[0])
-                    .orElseThrow(UserNotFoundException::new);
-            if (!BCrypt.checkpw(credentials[1], userAccount.getPassword())) {
-                throw new WrongPasswordException();
-            }
-
-            request = new WrappedRequest(request, credentials[0]);
+            Optional<UserAccount> userAccount = userAccountRepository.findById(credentials[0]);
+            String login = userAccount.isPresent() ?
+                    BCrypt.checkpw(credentials[1], userAccount.get().getPassword()) ?
+                            credentials[0] :
+                            WrongPasswordException.exceptionName :
+                    UserNotFoundException.exceptionName;
+            request = new WrappedRequest(request, login);
         }
         filterChain.doFilter(request, response);
     }

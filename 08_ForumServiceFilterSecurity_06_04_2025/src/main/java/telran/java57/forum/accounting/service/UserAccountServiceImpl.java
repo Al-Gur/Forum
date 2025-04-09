@@ -10,6 +10,7 @@ import telran.java57.forum.accounting.dto.UserDto;
 import telran.java57.forum.accounting.dto.UserRegisterDto;
 import telran.java57.forum.accounting.dto.exceptions.UserExistsException;
 import telran.java57.forum.accounting.dto.exceptions.UserNotFoundException;
+import telran.java57.forum.accounting.dto.exceptions.WrongPasswordException;
 import telran.java57.forum.accounting.model.UserAccount;
 import telran.java57.forum.accounting.dto.RolesDto;
 
@@ -33,6 +34,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserDto getUser(String login) {
+        if (login == WrongPasswordException.exceptionName) {
+            throw new WrongPasswordException();
+        }
+        if (login == UserNotFoundException.exceptionName) {
+            throw new UserNotFoundException();
+        }
         UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         return modelMapper.map(userAccount, UserDto.class);
     }
