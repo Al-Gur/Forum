@@ -32,15 +32,19 @@ public class AuthenticationFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         if (checkEndPoint(request.getMethod(), request.getServletPath())) {
             String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader != null) {
+            try {
                 String[] credentials = getCredentials(authorizationHeader);
-                Optional<UserAccount> userAccount = userAccountRepository.findById(credentials[0]);
-                String login = userAccount.isPresent() ?
-                        BCrypt.checkpw(credentials[1], userAccount.get().getPassword()) ?
-                                credentials[0] :
-                                WrongPasswordException.exceptionName :
-                        UserNotFoundException.exceptionName;
-                request = new WrappedRequest(request, login);
+                UserAccount userAccount = userAccountRepository.findById(credentials[0])
+                        .orElseThrow(RuntimeException::new);
+                if (BCrypt.checkpw(credentials[1], userAccount.getPassword())){
+                    request = new WrappedRequest(request,credentials[0]);
+                }
+                else {
+                    throw new RuntimeException();
+                }
+            }
+            catch(RuntimeException e){
+                response.sendError(401);
             }
         }
         filterChain.doFilter(request, response);
