@@ -10,14 +10,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import telran.java57.forum.accounting.dao.UserAccountRepository;
-import telran.java57.forum.accounting.dto.exceptions.UserNotFoundException;
-import telran.java57.forum.accounting.dto.exceptions.WrongPasswordException;
+import telran.java57.forum.accounting.model.Role;
 import telran.java57.forum.accounting.model.UserAccount;
+import telran.java57.forum.security.filter.model.User;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
-import java.util.Optional;
+import java.util.Set;
 
 @Component
 @Order(10)
@@ -36,14 +36,12 @@ public class AuthenticationFilter implements Filter {
                 String[] credentials = getCredentials(authorizationHeader);
                 UserAccount userAccount = userAccountRepository.findById(credentials[0])
                         .orElseThrow(RuntimeException::new);
-                if (BCrypt.checkpw(credentials[1], userAccount.getPassword())){
-                    request = new WrappedRequest(request,credentials[0]);
-                }
-                else {
+                if (BCrypt.checkpw(credentials[1], userAccount.getPassword())) {
+                    request = new WrappedRequest(request, userAccount);
+                } else {
                     throw new RuntimeException();
                 }
-            }
-            catch(RuntimeException e){
+            } catch (RuntimeException e) {
                 response.sendError(401);
             }
         }
@@ -51,7 +49,8 @@ public class AuthenticationFilter implements Filter {
     }
 
     private boolean checkEndPoint(String method, String path) {
-        return HttpMethod.POST.matches(method) && path.matches("/login");
+        return !(HttpMethod.POST.matches(method) && path.matches("/account/register")
+                || path.matches("/forum/posts/.*"));
     }
 
     private String[] getCredentials(String headerValue) {
@@ -62,17 +61,17 @@ public class AuthenticationFilter implements Filter {
 
     private class WrappedRequest extends HttpServletRequestWrapper {
         private String login;
+        private Set<Role> roles;
 
-        public WrappedRequest(HttpServletRequest request, String login) {
+        public WrappedRequest(HttpServletRequest request, UserAccount userAccount) {
             super(request);
-            this.login = login;
+            this.login = userAccount.getLogin();
+            this.roles = userAccount.getRoles();
         }
 
         @Override
         public Principal getUserPrincipal() {
-            return () -> {
-                return login;
-            };
+            return new User(login, roles);
         }
     }
 }
