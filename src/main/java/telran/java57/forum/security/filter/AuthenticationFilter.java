@@ -43,6 +43,7 @@ public class AuthenticationFilter implements Filter {
                 }
             } catch (RuntimeException e) {
                 response.sendError(401);
+                return;
             }
         }
         filterChain.doFilter(request, response);
