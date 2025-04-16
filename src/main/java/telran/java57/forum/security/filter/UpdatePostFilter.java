@@ -35,7 +35,7 @@ public class UpdatePostFilter implements Filter {
             }
             String owner = post.get().getAuthor();
             if (!user.getName().equalsIgnoreCase(owner)){
-                response.sendError(403, "You are not allowed to access this resource");
+                response.sendError(403, "Permission denied");
                 return;
             }
         }

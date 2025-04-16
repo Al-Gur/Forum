@@ -22,7 +22,7 @@ public class AdminManagingRolesFilter implements Filter {
         if(checkEndPoint(request.getMethod(), request.getServletPath())) {
             User user = (User) request.getUserPrincipal();
             if (!user.getRoles().contains(Role.ADMINISTRATOR)){
-                response.sendError(403, "You are not allowed to access this resource");
+                response.sendError(403, "Permission denied");
                 return;
             }
         }

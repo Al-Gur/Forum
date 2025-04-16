@@ -24,7 +24,7 @@ public class DeleteUserFilter implements Filter {
             String[] parts = request.getServletPath().split("/");
             String owner = parts[parts.length-1];
             if (!(user.getName().equalsIgnoreCase(owner) || user.getRoles().contains(Role.ADMINISTRATOR))){
-                response.sendError(403, "You are not allowed to access this resource");
+                response.sendError(403, "Permission denied");
                 return;
             }
         }

@@ -82,7 +82,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public void changePassword(String login, String newPassword) {
         UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
-        userAccount.setPassword(newPassword);
+        userAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
         userAccountRepository.save(userAccount);
     }
 

@@ -47,13 +47,11 @@ public class UserAccountController {
         return userAccountService.changeRolesList(login,role,false);
     }
 
-    //TODO don't testing
     @PostMapping("/login")
     public UserDto login(Principal principal){
         return userAccountService.getUser(principal.getName());
     }
 
-    //TODO don't testing
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword){

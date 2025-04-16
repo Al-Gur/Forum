@@ -35,7 +35,7 @@ public class DeletePostFilter implements Filter {
             }
             String owner = post.get().getAuthor();
             if (!(user.getName().equalsIgnoreCase(owner) || user.getRoles().contains(Role.MODERATOR))){
-                response.sendError(403, "You are not allowed to access this resource");
+                response.sendError(403, "Permission denied");
                 return;
             }
         }
