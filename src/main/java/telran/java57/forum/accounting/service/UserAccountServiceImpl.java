@@ -3,6 +3,8 @@ package telran.java57.forum.accounting.service;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import telran.java57.forum.accounting.dao.UserAccountRepository;
 import telran.java57.forum.accounting.dto.UpdateUserDto;
@@ -16,9 +18,10 @@ import telran.java57.forum.accounting.dto.RolesDto;
 
 @Service
 @RequiredArgsConstructor
-public class UserAccountServiceImpl implements UserAccountService {
+public class UserAccountServiceImpl implements UserAccountService, CommandLineRunner {
     final UserAccountRepository userAccountRepository;
     final ModelMapper modelMapper;
+    final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto register(UserRegisterDto userRegisterDto) {
@@ -86,4 +89,8 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountRepository.save(userAccount);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("-RUN-");
+    }
 }
