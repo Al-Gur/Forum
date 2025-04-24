@@ -85,7 +85,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
     @Override
     public void changePassword(String login, String newPassword) {
         UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
-        userAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        userAccount.setPassword(passwordEncoder.encode(newPassword));
         userAccountRepository.save(userAccount);
     }
 
